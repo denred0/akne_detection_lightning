@@ -56,9 +56,9 @@ def train_test(data_path, fold_number, batch_size, init_lr, max_epochs, early_st
                          callbacks=callbacks)
 
     # Train the model ⚡🚅⚡
-    trainer.fit(model, dm)
+    trainer.fit(model, dm.train_dataloader(), dm.val_dataloader())
 
-    results = trainer.test()[0]
+    trainer.test(model, dm.test_dataloader())
 
 
 if __name__ == '__main__':

@@ -142,16 +142,18 @@ class Model(pl.LightningModule):
         test_loss = test_loss.float() / len(preds)
         test_acc = test_corrects / len(preds)
 
-        self.log('test_loss', test_loss.data, on_step=True, on_epoch=True, logger=True)
-        self.log('test_acc', test_acc, on_step=True, on_epoch=True, logger=True)
+        self.log('test_loss', test_loss.data, on_step=False, on_epoch=True, logger=True, prog_bar=True)
+        self.log('test_acc', test_acc, on_step=False, on_epoch=True, logger=True, prog_bar=True)
 
-        _, _, pre_se_sp_yi_report = report_precision_se_sp_yi(y_pred, y_true)
-        _, _, pre_se_sp_yi_report_m = report_precision_se_sp_yi(y_pred_m, y_true)
+        _, AVE_ACC, pre_se_sp_yi_report = report_precision_se_sp_yi(y_pred, y_true)
+        _, AVE_ACC_m, pre_se_sp_yi_report_m = report_precision_se_sp_yi(y_pred_m, y_true)
         _, MAE, MSE, mae_mse_report = report_mae_mse(l_true, l_pred, y_true)
 
-        # self.logger.write(str(pre_se_sp_yi_report) + '\n')
-        # self.logger.write(str(pre_se_sp_yi_report_m) + '\n')
-        # self.logger.write(str(mae_mse_report) + '\n')
+        self.log('AVE_ACC', AVE_ACC, on_step=False, on_epoch=True, logger=True, prog_bar=True)
+        self.log('AVE_ACC_m', AVE_ACC_m, on_step=False, on_epoch=True, logger=True, prog_bar=True)
+        self.log('MAE', MAE, on_step=False, on_epoch=True, logger=True, prog_bar=True)
+        self.log('MSE', MSE, on_step=False, on_epoch=True, logger=True, prog_bar=True)
+
         return test_loss
 
     def training_epoch_end(self, outputs):
