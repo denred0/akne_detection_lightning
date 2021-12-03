@@ -5,7 +5,8 @@ from pathlib import Path
 
 # lightning related imports
 import pytorch_lightning as pl
-from pytorch_lightning.loggers import TensorBoardLogger
+# from pytorch_lightning.loggers import TensorBoardLogger
+from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from pytorch_lightning.callbacks import ModelCheckpoint
 
@@ -25,7 +26,8 @@ def train_test(data_path, fold_number, batch_size, init_lr, max_epochs, early_st
     model = Model(sigma=sigma, lam=lam, learning_rate=init_lr)
 
     experiment_name = "acne_fold" + str(fold_number)
-    logger = TensorBoardLogger('tb_logs', name=experiment_name)
+    # logger = TensorBoardLogger('tb_logs', name=experiment_name)
+    wandb_logger = WandbLogger(name=experiment_name, project='akne_detection')
 
     checkpoint_name = experiment_name + '_{epoch}_{test_loss:.4f}_{test_acc:.3f}'
 
@@ -51,7 +53,7 @@ def train_test(data_path, fold_number, batch_size, init_lr, max_epochs, early_st
     trainer = pl.Trainer(max_epochs=max_epochs,
                          progress_bar_refresh_rate=2,
                          gpus=1,
-                         logger=logger,
+                         logger=wandb_logger,
                          # auto_lr_find=True,
                          callbacks=callbacks)
 
@@ -70,7 +72,7 @@ if __name__ == '__main__':
     data_path = 'data/acne4/VOCdevkit2007/VOC2007/ImageSets/Main/JPEGImages'
     batch_size = 32
     init_lr = 0.0001
-    max_epochs = 1
+    max_epochs = 10
     early_stop_patience = 6
 
     for fold in folds:

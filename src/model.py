@@ -63,10 +63,10 @@ class Model(pl.LightningModule):
         self.losses_cou2cls.update(loss_cls_cou.item(), b_x.size(0))
         self.losses.update(loss.item(), b_x.size(0))
 
-        self.log('losses_cls', self.losses_cls.avg, on_step=True, on_epoch=True, logger=True, prog_bar=True)
-        self.log('losses_cou', self.losses_cou.avg, on_step=True, on_epoch=True, logger=True, prog_bar=True)
-        self.log('losses_cou2cls', self.losses_cou2cls.avg, on_step=True, on_epoch=True, logger=True, prog_bar=True)
-        self.log('losses', self.losses.avg, on_step=True, on_epoch=True, logger=True, prog_bar=True)
+        self.log('losses_cls', self.losses_cls.avg, on_step=False, on_epoch=True, logger=True, prog_bar=True)
+        self.log('losses_cou', self.losses_cou.avg, on_step=False, on_epoch=True, logger=True, prog_bar=True)
+        self.log('losses_cou2cls', self.losses_cou2cls.avg, on_step=False, on_epoch=True, logger=True, prog_bar=True)
+        self.log('losses', self.losses.avg, on_step=True, on_epoch=False, logger=True, prog_bar=True)
 
         return loss
 
